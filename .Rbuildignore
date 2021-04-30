@@ -1,0 +1,10 @@
+.editorconfig
+local_data
+.git
+.travis.yml
+.org
+^.*\.Rproj$
+^\.Rproj\.user$
+README.md
+Rplots.pdf
+.DS_Store
