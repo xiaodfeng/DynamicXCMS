@@ -2,9 +2,7 @@
 ## should go in here.
 #' @include c.R functions-binning.R cwTools.R
 
-############################################################
-## centWave
-##
+#centWave###########################################################
 ## Some notes on a potential speed up:
 ## Tried:
 ## o initialize peaks matrix in the inner loop instead of rbind: slower.
@@ -128,7 +126,9 @@
 #' scantime = xr@scantime, valsPerSpect = valsPerSpect, noise = 10000)
 #' head(res)
 do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
-                                       ppm = 25,
+                                       A = 4.289723e-07,
+                                       ppm = 1,
+                                       Instrument = 2,
                                        peakwidth = c(20, 50),
                                        snthresh = 10,
                                        prefilter = c(3, 100),
@@ -145,9 +145,9 @@ do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
     if (getOption("originalCentWave", default = TRUE)) {
         ## message("DEBUG: using original centWave.")
         .centWave_orig(mz = mz, int = int, scantime = scantime,
-                       valsPerSpect = valsPerSpect, ppm = ppm, peakwidth = peakwidth,
+                       valsPerSpect = valsPerSpect, A = A, ppm=ppm,Instrument=Instrument, peakwidth = peakwidth,
                        snthresh = snthresh, prefilter = prefilter,
-                       mzCenterFun = mzCenterFun, integrate = integrate,
+                       mzCenterFun = mzCenterFun,integrate = integrate,
                        mzdiff = mzdiff, fitgauss = fitgauss, noise = noise,
                        verboseColumns = verboseColumns, roiList = roiList,
                        firstBaselineCheck = firstBaselineCheck,
@@ -155,20 +155,19 @@ do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
     } else {
         ## message("DEBUG: using modified centWave.")
         .centWave_new(mz = mz, int = int, scantime = scantime,
-                      valsPerSpect = valsPerSpect, ppm = ppm, peakwidth = peakwidth,
+                      valsPerSpect = valsPerSpect, A = A, ppm=ppm, Instrument=Instrument, peakwidth = peakwidth,
                       snthresh = snthresh, prefilter = prefilter,
-                      mzCenterFun = mzCenterFun, integrate = integrate,
+                      mzCenterFun = mzCenterFun,integrate = integrate,
                       mzdiff = mzdiff, fitgauss = fitgauss, noise = noise,
                       verboseColumns = verboseColumns, roiList = roiList,
                       firstBaselineCheck = firstBaselineCheck,
                       roiScales = roiScales, sleep = sleep)
     }
 }
-############################################################
-## ORIGINAL code from xcms_1.49.7
+#ORIGINAL centWave code from xcms_1.49.7##########################################################
 .centWave_orig <- function(mz, int, scantime, valsPerSpect,
-                           ppm = 25, peakwidth = c(20,50), snthresh = 10,
-                           prefilter = c(3,100), mzCenterFun = "wMean",
+                           A = 4.289723e-07, ppm=1, Instrument = 2 ,peakwidth = c(20,50), snthresh = 10,
+                           prefilter = c(3,100), mzCenterFun = "wMean", 
                            integrate = 1, mzdiff = -0.001, fitgauss = FALSE,
                            noise = 0, ## noise.local=TRUE,
                            sleep = 0, verboseColumns = FALSE, roiList = list(),
@@ -244,9 +243,9 @@ do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
     scRangeTol <-  maxDescOutlier <- floor(minPeakWidth / 2)
     scanrange <- c(1, length(scantime))
 
-    ## If no ROIs are supplied then search for them.
+    ## First stage: If no ROIs are supplied then search for them.
     if (length(roiList) == 0) {
-        message("Detecting mass traces at ", ppm, " ppm ... ", appendLF = FALSE)
+        message("Detecting mass traces with dynamic binning method ", appendLF = FALSE)
         ## flush.console();
         ## We're including the findmzROI code in this function to reduce
         ## the need to copy objects etc.
@@ -261,7 +260,9 @@ do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
                                      as.double(c(0.0, 0.0)),
                                      as.integer(scanrange),
                                      as.integer(length(scantime)),
+                                     as.double(A),
                                      as.double(ppm * 1e-6),
+                                     as.double(Instrument),
                                      as.integer(minCentroids),
                                      as.integer(prefilter),
                                      as.integer(noise),
@@ -692,6 +693,7 @@ do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
 
     return(pr)
 }
+#NEW centWave code####
 ## This version fixes issue #135, i.e. that the peak signal is integrated based
 ## on the mzrange of the ROI and not of the actually reported peak.
 ## Issue #136.
@@ -713,7 +715,7 @@ do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
 ##   contains all intensities from the ROI - might actually not be too bad
 ##   though.
 .centWave_new <- function(mz, int, scantime, valsPerSpect,
-                          ppm = 25, peakwidth = c(20,50), snthresh = 10,
+                          A = 4.289723e-07,ppm = 1,Instrument = 2,peakwidth = c(20,50), snthresh = 10,
                           prefilter = c(3,100), mzCenterFun = "wMean",
                           integrate = 1, mzdiff = -0.001, fitgauss = FALSE,
                           noise = 0, ## noise.local=TRUE,
@@ -789,7 +791,7 @@ do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
 
     ## If no ROIs are supplied then search for them.
     if (length(roiList) == 0) {
-        message("Detecting mass traces at ", ppm, " ppm ... ", appendLF = FALSE)
+        message("Detecting mass traces with dynamic binning method ", appendLF = FALSE)
         ## flush.console();
         ## We're including the findmzROI code in this function to reduce
         ## the need to copy objects etc.
@@ -804,7 +806,9 @@ do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
                                      as.double(c(0.0, 0.0)),
                                      as.integer(scanrange),
                                      as.integer(length(scantime)),
+                                     as.double(A),
                                      as.double(ppm * 1e-6),
+                                     as.double(Instrument),
                                      as.integer(minCentroids),
                                      as.integer(prefilter),
                                      as.integer(noise),
@@ -1212,8 +1216,8 @@ do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
 
 
 
-############################################################
-## massifquant
+#massifquant###########################################################
+
 ##
 #' @title Core API function for massifquant peak detection
 #'
@@ -1414,8 +1418,8 @@ do_findChromPeaks_massifquant <- function(mz,
 ## .matchedFilter_no_iter: original binning, but a single binning call.
 ## .matchedFilter_binYonX_no_iter: single binning call using our binning function.
 
-############################################################
-## matchedFilter
+#matchedFilter###########################################################
+## 
 ##
 ##  That's the function that matches the code from the
 ##  findPeaks.matchedFilter method from the xcms package.
@@ -1737,7 +1741,7 @@ do_findChromPeaks_matchedFilter <- function(mz,
     return(rmat)
 }
 
-############################################################
+#.matchedFilter_binYonX_no_iter###########################################################
 ## The code of this function is basically the same than of the original
 ## findPeaks.matchedFilter method in xcms with the following differences:
 ##  o Create the full 'profile matrix' (i.e. the m/z binned matrix) once
@@ -1944,8 +1948,8 @@ do_findChromPeaks_matchedFilter <- function(mz,
 }
 
 
-############################################################
-## MSW
+#MSW###########################################################
+## 
 ##
 #' @title Core API function for single-spectrum non-chromatography MS data
 #'     peak detection
@@ -2062,7 +2066,7 @@ do_findPeaks_MSW <- function(mz, int, snthresh = 3,
 
     peaklist
 }
-############################################################
+#.MSW_orig###########################################################
 ## The original code
 ## This should be removed at some point.
 .MSW_orig <- function(mz, int, snthresh = 3, verboseColumns = FALSE, ...) {
@@ -2131,7 +2135,7 @@ do_findPeaks_MSW <- function(mz, int, snthresh = 3,
 
     peaklist
 }
-############################################################
+#.MSW_orig###########################################################
 ## The original code
 ## This should be removed at some point.
 .MSW_orig <- function(mz, int, snthresh = 3, verboseColumns = FALSE, ...) {
@@ -2205,7 +2209,7 @@ do_findPeaks_MSW <- function(mz, int, snthresh = 3,
 
 
 
-############################################################
+#do_predictIsotopeROIs###########################################################
 ## MS1
 ## This one might be too cumbersome to do it for plain vectors. It would be ideal
 ## for MSnExp objects though.
@@ -2509,7 +2513,7 @@ do_define_adducts <- function(peaks., polarity = "positive") {
 
 
 
-############################################################
+#do_findKalmanROI###########################################################
 ## do_findKalmanROI
 do_findKalmanROI <- function(mz, int, scantime, valsPerSpect,
                              mzrange = c(0.0, 0.0),
@@ -2545,7 +2549,7 @@ do_findKalmanROI <- function(mz, int, scantime, valsPerSpect,
     res
 }
 
-############################################################
+#do_findChromPeaks_centWaveWithPredIsoROIs###########################################################
 ## do_findChromPeaks_centWaveWithPredIsoROIs
 ## 1) Run a centWave.
 ## 2) Predict isotope ROIs for the identified peaks.

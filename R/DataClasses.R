@@ -529,7 +529,7 @@ NULL
 #'     for a chromatographic peak detection using the centWave method. Instances
 #'     should be created with the \code{CentWaveParam} constructor.
 #'
-#' @slot .__classVersion__,ppm,peakwidth,snthresh,prefilter,mzCenterFun,integrate,mzdiff,fitgauss,noise,verboseColumns,roiList,firstBaselineCheck,roiScales See corresponding parameter above. \code{.__classVersion__} stores
+#' @slot .__classVersion__,A,ppm,Instrument,peakwidth,snthresh,prefilter,mzCenterFun,integrate,mzdiff,fitgauss,noise,verboseColumns,roiList,firstBaselineCheck,roiScales See corresponding parameter above. \code{.__classVersion__} stores
 #' the version from the class. Slots values should exclusively be accessed
 #' \emph{via} the corresponding getter and setter methods listed above.
 #'
@@ -559,7 +559,9 @@ NULL
 #' head(chromPeaks(res))
 setClass("CentWaveParam",
          slots = c(
+             A = "numeric",
              ppm = "numeric",
+             Instrument = "numeric",
              peakwidth = "numeric",
              snthresh = "numeric",
              prefilter = "numeric",
@@ -575,7 +577,9 @@ setClass("CentWaveParam",
          ),
          contains = c("Param"),
          prototype = prototype(
-             ppm = 25,
+             A = 4.289723e-07,
+             ppm = 1,
+             Instrument = 2,
              peakwidth = c(20, 50),
              snthresh = 10,
              prefilter = c(3, 100),
@@ -591,9 +595,12 @@ setClass("CentWaveParam",
          ),
          validity = function(object) {
              msg <- character()
+             if (length(object@A) != 1 | any(object@A < 0))
+                 msg <- c(msg, paste0("'A' has to be positive numeric", " of length 1."))
              if (length(object@ppm) != 1 | any(object@ppm < 0))
-                 msg <- c(msg, paste0("'ppm' has to be positive numeric",
-                                      " of length 1."))
+               msg <- c(msg, paste0("'ppm' has to be positive numeric", " of length 1."))
+             if (length(object@Instrument) != 1 | any(object@Instrument < 0))
+               msg <- c(msg, paste0("'Instrument' has to be positive numeric", " of length 1."))
              if (length(object@peakwidth) != 2 | any(object@peakwidth < 0))
                  msg <- c(msg, paste0("'peakwidth' has to be a numeric",
                                       " of length 2 with only positive",
@@ -604,8 +611,7 @@ setClass("CentWaveParam",
              if (length(object@prefilter) != 2)
                  msg <- c(msg, paste0("'prefilter' has to be a numeric",
                                       " of length 2."))
-             allowed_vals <- c("wMean", "mean", "apex", "wMeanApex3",
-                               "meanApex3")
+             allowed_vals <- c("wMean", "mean", "apex", "wMeanApex3","meanApex3")
              if (!(object@mzCenterFun) %in% allowed_vals)
                  msg <- c(msg, paste0("'mzCenterFun' has to be one of ",
                                       paste0("'", allowed_vals, "'",
@@ -964,7 +970,7 @@ NULL
 #'     method eventually in combination with the centWave algorithm. Instances
 #'     should be created with the \code{MassifquantParam} constructor.
 #'
-#' @slot .__classVersion__,ppm,peakwidth,snthresh,prefilter,mzCenterFun,integrate,mzdiff,fitgauss,noise,verboseColumns,criticalValue,consecMissedLimit,unions,checkBack,withWave See corresponding parameter above. \code{.__classVersion__} stores
+#' @slot .__classVersion__,A,ppm,Instrument,peakwidth,snthresh,prefilter,mzCenterFun,integrate,mzdiff,fitgauss,noise,verboseColumns,criticalValue,consecMissedLimit,unions,checkBack,withWave See corresponding parameter above. \code{.__classVersion__} stores
 #' the version from the class. Slots values should exclusively be accessed
 #' \emph{via} the corresponding getter and setter methods listed above.
 #'

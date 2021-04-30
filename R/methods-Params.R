@@ -51,7 +51,7 @@ setMethod("initialize", "CentWaveParam", function(.Object, ...) {
 setMethod("show", "CentWaveParam", function(object) {
     cat("Object of class: ", class(object), "\n")
     cat("Parameters:\n")
-    cat(" ppm:", ppm(object), "\n")
+    cat(" Instrument:", Instrument(object), "\n")
     cat(" peakwidth:", paste(peakwidth(object), collapse = ", "), "\n")
     cat(" snthresh:", snthresh(object), "\n")
     cat(" prefilter:", paste(prefilter(object), collapse = ", "), "\n")
@@ -66,12 +66,15 @@ setMethod("show", "CentWaveParam", function(object) {
     cat(" roiScales length:", length(roiScales(object)), "\n")
 })
 
+
+
 #' @aliases ppm
 #'
 #' @description \code{ppm},\code{ppm<-}: getter and setter for the \code{ppm}
 #'     slot of the object.
 #'
 #' @rdname findChromPeaks-centWave
+
 setMethod("ppm", "CentWaveParam", function(object){ return(object@ppm)})
 #' @aliases ppm<-
 #'
@@ -83,6 +86,7 @@ setReplaceMethod("ppm", "CentWaveParam", function(object, value) {
     if (validObject(object))
         return(object)
 })
+
 
 #' @aliases peakwidth
 #'

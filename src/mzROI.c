@@ -37,7 +37,9 @@ struct pickOptionsStruct
    unsigned int  minEntries;
    unsigned int  minimumInt;
    unsigned int  minimumIntValues;
+   float MD;
    float dev;
+   float Instrument;
 } pickOptions;
 
 
@@ -173,7 +175,7 @@ int half,mid;
   }
   return(first);
 }
-
+//
 // Passes the m/z of an input spectrum (fMass) and checks if that m/z is
 // close enough to an existing mzROI to enable inclusion (depending on the
 // user defined ppm: difference mean m/z of ROI to fMass <= ppm * fMass / 1e6)
@@ -185,7 +187,16 @@ struct mzROIStruct * insertpeak(const double fMass, const double fInten,
 				struct pickOptionsStruct *pickOptions)
 {
   int i,wasfound = FALSE;
-  double ddev = (pickOptions->dev * fMass);
+  // original code: ddev = (pickOptions->dev * fMass);
+  double ddev = 4.289723*pow(10, -7)*pow(fMass, 1.5)+1*pow(10, -6)*fMass; 
+  if (pickOptions->Instrument==1)
+    ddev = (pickOptions->MD)*pow(fMass, 2)+(pickOptions->dev)*fMass;
+  if (pickOptions->Instrument==2)
+    ddev = (pickOptions->MD)*pow(fMass, 1.5)+(pickOptions->dev)*fMass;
+  if (pickOptions->Instrument==3)
+    ddev = (pickOptions->MD)*pow(fMass, 1)+(pickOptions->dev)*fMass;
+  if (pickOptions->Instrument==4)
+    ddev = pickOptions->MD;
   int lpos = lower_bound( fMass - ddev,mzval,0,mzLength->mzval);
   int hpos = upper_bound( fMass + ddev,mzval,lpos,mzLength->mzval - lpos);
   
@@ -546,7 +557,7 @@ SEXP getMZ(SEXP mz, SEXP intensity, SEXP scanindex, SEXP mzrange, SEXP scanrange
 }
 
 SEXP findmzROI(SEXP mz, SEXP intensity, SEXP scanindex, SEXP mzrange,
-	       SEXP scanrange, SEXP lastscan, SEXP dev, SEXP minEntries,
+	       SEXP scanrange, SEXP lastscan,SEXP MD, SEXP dev, SEXP Instrument, SEXP minEntries,
 	       SEXP prefilter, SEXP noise) {
   //jo double *pmz, *pintensity, mzrangeFrom,mzrangeTo;
   double *pmz, *pintensity;
@@ -562,7 +573,9 @@ SEXP findmzROI(SEXP mz, SEXP intensity, SEXP scanindex, SEXP mzrange,
   lastScan = INTEGER(lastscan)[0];
   inoise = INTEGER(noise)[0];
 
+  pickOptions.MD = REAL(MD)[0];
   pickOptions.dev = REAL(dev)[0];
+  pickOptions.Instrument = REAL(Instrument)[0];
   pickOptions.minEntries = INTEGER(minEntries)[0];
   pickOptions.minimumIntValues=INTEGER(prefilter)[0];
   pickOptions.minimumInt=INTEGER(prefilter)[1];

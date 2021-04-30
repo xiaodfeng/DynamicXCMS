@@ -81,12 +81,12 @@ GenericParam <- function(fun = character(), args = list()) {
 #'     peak detection by the centWave method.
 #'
 #' @rdname findChromPeaks-centWave
-CentWaveParam <- function(ppm = 25, peakwidth = c(20, 50), snthresh = 10,
+CentWaveParam <- function(A = 4.289723e-07, ppm = 1,Instrument=2, peakwidth = c(20, 50), snthresh = 10,
                           prefilter = c(3, 100), mzCenterFun = "wMean",
                           integrate = 1L, mzdiff = -0.001, fitgauss = FALSE,
                           noise = 0, verboseColumns = FALSE, roiList = list(),
                           firstBaselineCheck = TRUE, roiScales = numeric()) {
-    return(new("CentWaveParam", ppm = ppm, peakwidth = peakwidth,
+    return(new("CentWaveParam", A=A, ppm = ppm, Instrument=Instrument,peakwidth = peakwidth,
                snthresh = snthresh, prefilter = prefilter,
                mzCenterFun = mzCenterFun, integrate = as.integer(integrate),
                mzdiff = mzdiff, fitgauss = fitgauss, noise = noise,
