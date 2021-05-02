@@ -1,42 +1,29 @@
-[![Build Status](https://travis-ci.org/sneumann/xcms.svg?branch=master)](https://travis-ci.org/sneumann/xcms)
-[![codecov.io](https://codecov.io/github/sneumann/xcms/coverage.svg?branch=master)](https://codecov.io/github/sneumann/xcms?branch=master)
+[![Build Status](https://travis-ci.org/xiaodfeng/DynamicXCMS.svg?branch=master)](https://travis-ci.org/xiaodfeng/DynamicXCMS)
+[![codecov.io](https://codecov.io/github/xiaodfeng/DynamicXCMS/coverage.svg?branch=master)](https://codecov.io/github/xiaodfeng/DynamicXCMS?branch=master)
 
-# The `xcms` package (version >= 3)
+# The `dynamic xcms` package (based on xcms 3.8.2)
 
 <img align = "right" src="https://raw.githubusercontent.com/Bioconductor/BiocStickers/master/xcms/xcms.png" height="200">
 
 
-Version >= 3 of the `xcms` package are updated and partially re-written versions
-of the original `xcms` package. The version number *3* was selected to avoid
-confusions with the `xcms2` (http://pubs.acs.org/doi/abs/10.1021/ac800795f)
-software. While providing all of the original software's functionality, `xcms`
-version >= 3 aims at:
+## How to track the code changes.
+    The original source codes of xcms 3.8.2 have been downloaded and uploaded to https://github.com/xiaodfeng/DynamicXCMS, with the commit “3.8.2, original xcms codes”. Based on this stable version, we implement the dynamic theory into the package, with the commit “3.8.2.1, dynamic xcms”. In this dynamic xcms package, seven files were changed: DESCRIPTION, DynamicXCMS.Rproj, DataClasses.R, do_findChromPeaks-functions.R, functions-Params.R, methods-Params.R, and mzROI.c, detailed changes can be accessed in the depository. 
+## How to install the package.
+	Download the source codes from https://github.com/xiaodfeng/DynamicXCMS or from Appendix C of the paper.
+	Install the downloaded codes with the following commands:
+library(devtools)
+install("../DynamicXCMS ") # install the package locally, not from the website. See the output below
+library(xcms)
+## How to use the package.
+In the original xcms, the peak detection mass tolerance (PDMT) was set by the parameter ppm. While in the dynamic xcms, the PDMT was set by parameters A, ppm, and instrument. The A in dynamic xcms can be calculated by the reference m/z and the reference mass resolving power of the .raw data and equals 4.2897〖∙10〗^(-7) according to equation 20 of the manuscript. The ppm in dynamic xcms was used to set the mass fluctuation (MF) and equals 1 according to equation 20 of the manuscript. The instrument in dynamic xcms indicates the instrument types, with FTICR=1, Orbitrap=2, Q-TOF=3, and Quadrupole=4. With this research's Orbitrap dataset, the parameters for peak detection were set below:
+cwp <- CentWaveParam(
+  A = 4.289723e-07, ppm=1,  Instrument=2,
+  peakwidth=c(2.4,30), snthresh = 10, noise=100000, 
+  prefilter=c(1, 200000),  firstBaselineCheck = TRUE, integrate=2)
+Peak detection with dynamic xcms, see output below:
+xdatad <- findChromPeaks(Raw_data, param = cwp,BPPARAM = BPPARAM)
 
-1) Better integration into the Bioconductor framework:
-  - Make use and extend classes defined in the `MSnbase` package.
-  - Implement class versioning (Biobase's `Versioned` class).
-  - Use `BiocParallel` for parallel processing.
-2) Implementation of validation methods for all classes to ensure data
-   integrity.
-3) Easier and faster access to raw spectra data.
-4) Cleanup of the source code:
-  - Remove obsolete and redundant functionality (`getEIC`, `rawEIC` etc).
-  - Unify interfaces, i.e. implement a layer of base functions accessing all
-    analysis methods (which are implemented in C, C++ or R).
-5) Using a more consistent naming scheme of methods that follows established
-   naming conventions (e.g. `correspondence` instead of `grouping`).
-6) Update, improve and extend the documentation.
-7) Establishing a layer of base R-functions that interface all analysis
-   methods. These should take M/Z, retention time (or scan index) and intensity
-   values as input along with optional arguments for the downstream functions
-   (implemented in C, C++ or R). The input arguments should be basic R objects
-   (numeric vectors) thus enabling easy integration of analysis methods in other
-   R packages.
-8) The user interface's analysis methods should take the (raw) data object and a
-   parameter class, that is used for dispatching to the corresponding analysis
-   algorithm.
 
-Discussions and suggestions are welcome:
-https://github.com/sneumann/xcms/issues
+## Discussions and suggestions are welcome:
+https://github.com/xiaodfeng/DynamicXCMS/issues
 
-For more information see the package [vignette](vignettes/xcms.Rmd).
