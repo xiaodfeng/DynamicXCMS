@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/xiaodfeng/DynamicXCMS.svg?branch=main)](https://travis-ci.org/xiaodfeng/DynamicXCMS)
+[![Build Status](https://travis-ci.com/xiaodfeng/DynamicXCMS.svg?branch=main)](https://travis-ci.com/xiaodfeng/DynamicXCMS)
 
 # The `dynamic xcms` package (based on xcms 3.8.2)
 
