@@ -187,15 +187,17 @@ struct mzROIStruct * insertpeak(const double fMass, const double fInten,
 				struct pickOptionsStruct *pickOptions)
 {
   int i,wasfound = FALSE;
-  // original code: ddev = (pickOptions->dev * fMass);
+  // original code: ddev = (pickOptions->dev * fMass); 
+  // the ddev parameter was used for findmzROI function
+  // The default ddev parameter was calculated base on the equation (20) in the manuscript
   double ddev = 4.289723*pow(10, -7)*pow(fMass, 1.5)+1*pow(10, -6)*fMass; 
-  if (pickOptions->Instrument==1)
+  if (pickOptions->Instrument==1) // For FTICR instrument
     ddev = (pickOptions->MD)*pow(fMass, 2)+(pickOptions->dev)*fMass;
-  if (pickOptions->Instrument==2)
+  if (pickOptions->Instrument==2) // For Orbitrap instrument
     ddev = (pickOptions->MD)*pow(fMass, 1.5)+(pickOptions->dev)*fMass;
-  if (pickOptions->Instrument==3)
+  if (pickOptions->Instrument==3) // For Q-TOF instrument
     ddev = (pickOptions->MD)*pow(fMass, 1)+(pickOptions->dev)*fMass;
-  if (pickOptions->Instrument==4)
+  if (pickOptions->Instrument==4) // For Quadrupole instrument
     ddev = pickOptions->MD;
   int lpos = lower_bound( fMass - ddev,mzval,0,mzLength->mzval);
   int hpos = upper_bound( fMass + ddev,mzval,lpos,mzLength->mzval - lpos);

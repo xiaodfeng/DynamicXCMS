@@ -126,9 +126,9 @@
 #' scantime = xr@scantime, valsPerSpect = valsPerSpect, noise = 10000)
 #' head(res)
 do_findChromPeaks_centWave <- function(mz, int, scantime, valsPerSpect,
-                                       A = 4.289723e-07,
-                                       ppm = 1,
-                                       Instrument = 2,
+                                       A = 4.289723e-07, # Set the default value of the constant value calculated by mass resolving power and reference mz
+                                       ppm = 1, # Set the default value of mass fluctuation
+                                       Instrument = 2, # set the default value of instrument types, FTICR=1, Orbitrap=2, Q-TOF=3, and Quadrupole=4
                                        peakwidth = c(20, 50),
                                        snthresh = 10,
                                        prefilter = c(3, 100),

@@ -51,7 +51,7 @@ setMethod("initialize", "CentWaveParam", function(.Object, ...) {
 setMethod("show", "CentWaveParam", function(object) {
     cat("Object of class: ", class(object), "\n")
     cat("Parameters:\n")
-    cat(" Instrument:", Instrument(object), "\n")
+    cat(" Instrument:", Instrument(object), "\n") # changed the original ppm parameter into Instrument parameter
     cat(" peakwidth:", paste(peakwidth(object), collapse = ", "), "\n")
     cat(" snthresh:", snthresh(object), "\n")
     cat(" prefilter:", paste(prefilter(object), collapse = ", "), "\n")

@@ -559,9 +559,9 @@ NULL
 #' head(chromPeaks(res))
 setClass("CentWaveParam",
          slots = c(
-             A = "numeric",
+             A = "numeric", # This parameter was added for dynamic theory, which should be a constant value calculated by mass resolving power and reference mz
              ppm = "numeric",
-             Instrument = "numeric",
+             Instrument = "numeric", # This parameter was added for the dynamic theory, FTICR=1, Orbitrap=2, Q-TOF=3, and Quadrupole=4
              peakwidth = "numeric",
              snthresh = "numeric",
              prefilter = "numeric",
