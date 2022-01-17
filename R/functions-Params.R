@@ -81,20 +81,19 @@ GenericParam <- function(fun = character(), args = list()) {
 #'     peak detection by the centWave method.
 #'
 #' @rdname findChromPeaks-centWave
-CentWaveParam <- function(A = 4.289723e-07, # Set the default value of the constant value calculated by mass resolving power and reference mz
-                          ppm = 1, # Set the default value of mass fluctuation
-                          Instrument=2, # set the default value of instrument types, FTICR=1, Orbitrap=2, Q-TOF=3, and Quadrupole=4
-                          peakwidth = c(20, 50), snthresh = 10,
+CentWaveParam <- function(A = 4.289723e-07, ppm = 1,Instrument=2, peakwidth = c(20, 50), snthresh = 10,
                           prefilter = c(3, 100), mzCenterFun = "wMean",
                           integrate = 1L, mzdiff = -0.001, fitgauss = FALSE,
                           noise = 0, verboseColumns = FALSE, roiList = list(),
-                          firstBaselineCheck = TRUE, roiScales = numeric()) {
-    return(new("CentWaveParam", A=A, ppm = ppm, Instrument=Instrument,peakwidth = peakwidth,
+                          firstBaselineCheck = TRUE, roiScales = numeric(),
+                          extendLengthMSW = FALSE) {
+    return(new("CentWaveParam", A=A, ppm = ppm, Instrument=Instrument, peakwidth = peakwidth,
                snthresh = snthresh, prefilter = prefilter,
                mzCenterFun = mzCenterFun, integrate = as.integer(integrate),
                mzdiff = mzdiff, fitgauss = fitgauss, noise = noise,
                verboseColumns = verboseColumns, roiList = roiList,
-               firstBaselineCheck = firstBaselineCheck, roiScales = roiScales))
+               firstBaselineCheck = firstBaselineCheck, roiScales = roiScales,
+               extendLengthMSW = extendLengthMSW))
 }
 
 #' @return The \code{MatchedFilterParam} function returns a
@@ -361,3 +360,37 @@ CalibrantMassParam <- function(mz = list(), mzabs = 0.0001, mzppm = 5,
 
 .mz <- function(x)
     x@mz
+
+#' @rdname refineChromPeaks-clean
+#'
+#' @md
+CleanPeaksParam <- function(maxPeakwidth = 10) {
+    new("CleanPeaksParam", maxPeakwidth = as.numeric(maxPeakwidth))
+}
+
+#' @rdname refineChromPeaks-merge
+#'
+#' @md
+MergeNeighboringPeaksParam <- function(expandRt = 2, expandMz = 0, ppm = 10,
+                                       minProp = 0.75) {
+    new("MergeNeighboringPeaksParam", expandRt = as.numeric(expandRt),
+        expandMz = as.numeric(expandMz), ppm = as.numeric(ppm),
+        minProp = as.numeric(minProp))
+}
+
+#' @rdname fillChromPeaks
+ChromPeakAreaParam <- function(mzmin = function(z) quantile(z, probs = 0.25),
+                               mzmax = function(z) quantile(z, probs = 0.75),
+                               rtmin = function(z) quantile(z, probs = 0.25),
+                               rtmax = function(z) quantile(z, probs = 0.75)) {
+    new("ChromPeakAreaParam", mzmin = mzmin, mzmax = mzmax, rtmin = rtmin,
+        rtmax = rtmax)
+}
+
+#' @rdname refineChromPeaks-filter-intensity
+#'
+#' @md
+FilterIntensityParam <- function(threshold = 0, nValues = 1L, value = "maxo") {
+    new("FilterIntensityParam", threshold = as.numeric(threshold),
+        nValues = as.integer(nValues), value = value)
+}

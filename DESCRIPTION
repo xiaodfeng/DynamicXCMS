@@ -1,6 +1,10 @@
 Package: xcms
-Version: 3.8.2.1
+Version: 3.16.1.2
 Title: LC-MS and GC-MS Data Analysis
+Description: Framework for processing and visualization of chromatographically
+    separated and single-spectra mass spectral data. Imports from AIA/ANDI NetCDF,
+    mzXML, mzData and mzML files. Preprocesses data for high-throughput, untargeted
+    analyte profiling.
 Authors@R: c(
 	   person(given = "Colin A.", family = "Smith",
 	   email = "csmith@scripps.edu",
@@ -24,119 +28,64 @@ Authors@R: c(
 	   comment = c(ORCID = "0000-0002-6977-7147")),
 	   person(given = "Michael", family = "Witting",
 	   email = "michael.witting@helmholtz-muenchen.de",
-	   role = "ctb")
+	   role = "ctb"),
+	   person(given = "William", family = "Kumler",
+	   email = "wkumler@uw.edu", role = "ctb",
+	   comment = c(ORCID = "0000-0002-5022-8009"))
 	   )
-Author: Colin A. Smith <csmith@scripps.edu>,
-    Ralf Tautenhahn <rtautenh@gmail.com>,
-    Steffen Neumann <sneumann@ipb-halle.de>,
-    Paul Benton <hpbenton@scripps.edu>,
-    Christopher Conley <cjconley@ucdavis.edu>,
-    Johannes Rainer <Johannes.Rainer@eurac.edu>,
-    Michael Witting <michael.witting@helmholtz-muenchen.de>
-Maintainer: Steffen Neumann <sneumann@ipb-halle.de>
-Depends:
-    R (>= 2.14.0),
-    methods,
-    Biobase,
-    BiocParallel (>= 1.8.0),
-    MSnbase (>= 2.9.3)
-Imports:
-    mzR (>= 2.19.5),
-    BiocGenerics,
-    ProtGenerics (>= 1.17.2),
-    lattice,
-    RColorBrewer,
-    plyr,
-    RANN,
-    multtest,
-    MassSpecWavelet (>= 1.5.2),
-    S4Vectors,
-    robustbase,
-    IRanges
-Suggests:
-    BiocStyle,
-    caTools,
-    knitr (>= 1.1.0),
-    faahKO,
-    msdata (>= 0.25.1),
-    ncdf4,
-    rgl,
-    microbenchmark,
-    testthat,
-    pander,
-    magrittr,
-    MALDIquant,
-    pheatmap
-Enhances:
-    Rgraphviz,
-    Rmpi,
-    XML
-Description: Framework for processing and visualization of chromatographically
-    separated and single-spectra mass spectral data. Imports from AIA/ANDI NetCDF,
-    mzXML, mzData and mzML files. Preprocesses data for high-throughput, untargeted
-    analyte profiling.
+Depends: R (>= 4.0.0), BiocParallel (>= 1.8.0), MSnbase (>= 2.19.1)
+Imports: mzR (>= 2.25.3), methods, Biobase, BiocGenerics, ProtGenerics
+        (>= 1.25.1), lattice, RColorBrewer, plyr, RANN, MassSpecWavelet
+        (>= 1.5.2), S4Vectors, robustbase, IRanges,
+        SummarizedExperiment, MsCoreUtils, MsFeatures
+Suggests: BiocStyle, caTools, knitr (>= 1.1.0), faahKO, msdata (>=
+        0.25.1), ncdf4, testthat, pander, magrittr, rmarkdown,
+        multtest, MALDIquant, pheatmap, Spectra (>= 1.1.17),
+        MsBackendMgf, progress
+Enhances: Rgraphviz, rgl, XML
 License: GPL (>= 2) + file LICENSE
 URL: https://github.com/sneumann/xcms
-VignetteBuilder: knitr
 BugReports: https://github.com/sneumann/xcms/issues/new
+VignetteBuilder: knitr
 biocViews: ImmunoOncology, MassSpectrometry, Metabolomics
-RoxygenNote: 6.1.1
-Collate:
-    'AllGenerics.R'
-    'functions-XChromatograms.R'
-    'functions-XChromatogram.R'
-    'DataClasses.R'
-    'Deprecated.R'
-    'MPI.R'
-    'c.R'
-    'cwTools.R'
-    'databases.R'
-    'functions-MsFeatureData.R'
-    'do_adjustRtime-functions.R'
-    'functions-binning.R'
-    'do_findChromPeaks-functions.R'
-    'functions-Params.R'
-    'do_groupChromPeaks-functions.R'
-    'fastMatch.R'
-    'functions-Chromatogram.R'
-    'functions-utils.R'
-    'functions-IO.R'
-    'functions-OnDiskMSnExp.R'
-    'functions-ProcessHistory.R'
-    'functions-XCMSnExp.R'
-    'functions-imputation.R'
-    'functions-normalization.R'
-    'functions-xcmsEIC.R'
-    'functions-xcmsFragments.R'
-    'functions-xcmsRaw.R'
-    'functions-xcmsSet.R'
-    'functions-xcmsSwath.R'
-    'init.R'
-    'matchpeaks.R'
-    'methods-Chromatogram.R'
-    'methods-Chromatograms.R'
-    'methods-IO.R'
-    'methods-MsFeatureData.R'
-    'methods-OnDiskMSnExp.R'
-    'methods-Params.R'
-    'methods-ProcessHistory.R'
-    'methods-XCMSnExp.R'
-    'methods-XChromatogram.R'
-    'methods-XChromatograms.R'
-    'methods-xcmsEIC.R'
-    'methods-xcmsFileSource.R'
-    'methods-xcmsFragments.R'
-    'methods-xcmsPeaks.R'
-    'methods-xcmsRaw.R'
-    'methods-xcmsSet.R'
-    'models.R'
-    'mzClust.R'
-    'netCDF.R'
-    'plotQC.R'
-    'ramp.R'
-    'specDist.R'
-    'write.mzquantML.R'
-    'writemzdata.R'
-    'writemztab.R'
-    'xcmsSource.R'
-    'zzz.R'
+RoxygenNote: 7.1.2
+Collate: 'AllGenerics.R' 'functions-XChromatograms.R'
+        'functions-XChromatogram.R' 'DataClasses.R' 'Deprecated.R'
+        'MPI.R' 'c.R' 'cwTools.R' 'databases.R'
+        'functions-MsFeatureData.R' 'do_adjustRtime-functions.R'
+        'functions-binning.R' 'do_findChromPeaks-functions.R'
+        'functions-Params.R' 'do_groupChromPeaks-functions.R'
+        'fastMatch.R' 'functions-Chromatogram.R' 'functions-utils.R'
+        'functions-IO.R' 'functions-OnDiskMSnExp.R'
+        'functions-ProcessHistory.R' 'functions-XCMSnExp.R'
+        'functions-imputation.R' 'functions-normalization.R'
+        'functions-xcmsEIC.R' 'functions-xcmsFragments.R'
+        'functions-xcmsRaw.R' 'functions-xcmsSet.R'
+        'functions-xcmsSwath.R' 'init.R' 'matchpeaks.R'
+        'methods-Chromatogram.R' 'methods-IO.R'
+        'methods-MChromatograms.R' 'methods-MsFeatureData.R'
+        'methods-OnDiskMSnExp.R' 'methods-Params.R'
+        'methods-ProcessHistory.R' 'methods-XCMSnExp.R'
+        'methods-XChromatogram.R' 'methods-XChromatograms.R'
+        'methods-group-features.R' 'methods-xcmsEIC.R'
+        'methods-xcmsFileSource.R' 'methods-xcmsFragments.R'
+        'methods-xcmsPeaks.R' 'methods-xcmsRaw.R' 'methods-xcmsSet.R'
+        'models.R' 'mzClust.R' 'plotQC.R' 'ramp.R' 'specDist.R'
+        'write.mzquantML.R' 'writemzdata.R' 'writemztab.R'
+        'xcmsSource.R' 'xdata.R' 'zzz.R'
+git_url: https://git.bioconductor.org/packages/xcms
+git_branch: RELEASE_3_14
+git_last_commit: ed02588
+git_last_commit_date: 2021-11-19
+Date/Publication: 2021-11-21
+NeedsCompilation: yes
+Packaged: 2021-11-21 13:15:47 UTC; biocbuild
+Author: Colin A. Smith [ctb],
+  Ralf Tautenhahn [ctb],
+  Steffen Neumann [aut, cre] (<https://orcid.org/0000-0002-7899-7192>),
+  Paul Benton [ctb],
+  Christopher Conley [ctb],
+  Johannes Rainer [ctb] (<https://orcid.org/0000-0002-6977-7147>),
+  Michael Witting [ctb],
+  William Kumler [ctb] (<https://orcid.org/0000-0002-5022-8009>)
+Maintainer: Steffen Neumann <sneumann@ipb-halle.de>
