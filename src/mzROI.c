@@ -188,7 +188,7 @@ struct mzROIStruct * insertpeak(const double fMass, const double fInten,
 {
   int i,wasfound = FALSE;
   // original code: ddev = (pickOptions->dev * fMass);
-  double ddev = 4.289723*pow(10, -7)*pow(fMass, 1.5)+1*pow(10, -6)*fMass; 
+  double ddev = 7.077682*pow(10, -7)*pow(fMass, 1.5)+1*pow(10, -6)*fMass; 
   if (pickOptions->Instrument==1)
     ddev = (pickOptions->MD)*pow(fMass, 2)+(pickOptions->dev)*fMass;
   if (pickOptions->Instrument==2)

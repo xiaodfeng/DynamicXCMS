@@ -539,7 +539,7 @@ NULL
 #'     for a chromatographic peak detection using the centWave method. Instances
 #'     should be created with the \code{CentWaveParam} constructor.
 #'
-#' @slot ppm,peakwidth,snthresh,prefilter,mzCenterFun,integrate,mzdiff,fitgauss,noise,verboseColumns,roiList,firstBaselineCheck,roiScales,extendLengthMSW See corresponding parameter above. Slots values should exclusively be accessed
+#' @slot A,ppm,Instrument,peakwidth,snthresh,prefilter,mzCenterFun,integrate,mzdiff,fitgauss,noise,verboseColumns,roiList,firstBaselineCheck,roiScales,extendLengthMSW See corresponding parameter above. Slots values should exclusively be accessed
 #' \emph{via} the corresponding getter and setter methods listed above.
 #'
 #' @rdname findChromPeaks-centWave
@@ -568,7 +568,9 @@ NULL
 #' head(chromPeaks(res))
 setClass("CentWaveParam",
          slots = c(
+             A = "numeric",
              ppm = "numeric",
+             Instrument = "numeric",
              peakwidth = "numeric",
              snthresh = "numeric",
              prefilter = "numeric",
