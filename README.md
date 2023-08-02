@@ -17,9 +17,17 @@ As the latest version of [MSnbase 2.27.1](https://github.com/lgatto/MSnbase/blob
 In the long run, the DynamicXCMS needs to be implanted based on the latest version of XCMS version 4.
 
 > library(devtools)
+> 
+> 
 > devtools::install("d:/your directory/MSnbase-2.14.2",update = FALSE)
+> 
+> 
 > devtools::install("d:/your directory/DynamicXCMS",update = FALSE)
+> 
+> 
 > library(MSnbase)
+> 
+> 
 > library(xcms)
 
 ## How to use the package.
